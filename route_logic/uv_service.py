@@ -2,19 +2,19 @@ import os
 import requests
 
 DEFAULT_LOCATION = {"lat": -36.8485, "long": 174.7633}
-NIWA_KEY = os.getenv("NIWA_KEY")
-NIWA_SECRET = os.getenv("NIWA_SECRET")
 NIWA_API_URL = "https://api.niwa.co.nz/uv/data"
 
 
 def get_uv_data():
+	niwa_key = os.getenv("NIWA_KEY")
+	niwa_secret = os.getenv("NIWA_SECRET")
 
 	params = {
 		"lat": DEFAULT_LOCATION["lat"], "long": DEFAULT_LOCATION["long"]
 	}
 
 	headers = {
-		"x-apikey": NIWA_KEY, "Accept": "application/json"
+		"x-apikey": niwa_key, "Accept": "application/json"
 	}
 
 	try:
