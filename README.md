@@ -1,6 +1,6 @@
 # UV Clothing Advisor
 
-This project is a Python Flask application that provides clothing accessory advice based on the UV index and weather conditions. It fetches the UV data from the NIWA UV API and uses local weather information to determine if it is cloudy or sunny. The advice is adjusted accordingly.
+This project is a Python Flask application that provides clothing accessory advice based on the UV index and weather conditions. It fetches the UV data from the NIWA UV API and cloud cover from OPEN WEATHER API to determine if it is cloudy or sunny. The advice is adjusted accordingly.
 
 ## Requirements
 
