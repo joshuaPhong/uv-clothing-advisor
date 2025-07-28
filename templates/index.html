@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UV Clothing Advice</title>
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.5.10/css/pico.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<main class="container">
+  <h1>☀️ UV Clothing Advisor</h1>
+
+  {% if uv_index is not none %}
+    <section>
+      <h2>Today's UV Index: <strong>{{ uv_index }}</strong></h2>
+      <p><strong>Advice:</strong> {{ advice }}</p>
+    </section>
+  {% else %}
+    <section>
+      <p><strong>Unable to fetch UV data.</strong></p>
+      <p>{{ advice }}</p>
+    </section>
+  {% endif %}
+
+  <footer>
+    <small>Powered by NIWA UV API | Location: Auckland (default)</small>
+  </footer>
+</main>
+
+</body>
+</html>
