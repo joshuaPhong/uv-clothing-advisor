@@ -2,6 +2,9 @@ def get_clothing_advice(uv_index, is_cloudy=None):
     if uv_index is None:
         return "UV data unavailable."
 
+    if is_cloudy is None:
+        return "Weather data unavailable."
+
     if is_cloudy:
         if uv_index <= 2:
             return "Low UV (cloudy): Minimal sun risk. Regular clothing is fine."
