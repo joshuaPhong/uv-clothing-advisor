@@ -48,12 +48,11 @@ Then open your browser at http://localhost:5000 to view the advisory page.
 
 
 How It Works
-UV Data: The app fetches the current UV index using the NIWA API.
-Weather Check: The app fetches the current cloud index from OPEN WEATHER API.
-It determines if the weather is cloudy or sunny,less than or greater than 50.
-Clothing Advice: Based on the combination of the UV index and the weather condition, the app provides tailored advice.
-Error Handling
-If the UV or weather data is not available, the application displays an appropriate error message.
+UV Data: The app fetches the current UV index using the NIWA API. 
+Weather Check: The app fetches the current cloud index from OPEN WEATHER API. 
+It determines if the weather is cloudy or sunny,less than or greater than 50. 
+Clothing Advice: Based on the combination of the UV index and the weather condition, the app provides tailored advice. 
+Error Handling: If the UV or weather data is not available, the application displays an appropriate error message. 
 
 
 Licence
