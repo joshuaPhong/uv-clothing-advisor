@@ -14,7 +14,7 @@
   {% if uv_index is not none %}
     <section>
       <h2>Today's UV Index: <strong>{{ uv_index }}</strong></h2>
-      <h2>Cloudy: <strong>{{ cloudy }}</strong></h2>
+      <h2>Cloudy: <strong>{{ cloudy }}</strong> %</h2>
 
       <p><strong>Advice:</strong> {{ advice }}</p>
     </section>
@@ -31,4 +31,40 @@
 </main>
 
 </body>
+<script>
+function getLocationAndSend() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                // Send to Flask
+                fetch('/set_location', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ lat: lat, lon: lon })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Server response:", data);
+                    // Optionally refresh UI or redirect
+                    window.location.reload();
+                });
+            },
+            function(error) {
+                console.error("Geolocation error:", error);
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+</script>
+
+<!-- Trigger button (can be auto-called too) -->
+<button onclick="getLocationAndSend()">Share My Location</button>
+
 </html>
