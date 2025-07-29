@@ -13,7 +13,7 @@ A Python Flask web application that provides personalized clothing and accessory
 ## How It Works
 
 1. **UV Data Collection**: Retrieves the current UV index using the NIWA API for accurate sun exposure measurements
-2. **Weather Analysis**: Fetches cloud cover data from OpenWeather API (0-100 scale, divided by 2) to determine if conditions are sunny (≥50) or cloudy (<50)
+2. **Weather Analysis**: Fetches cloud cover data from OpenWeather API (0-100 scale) to determine if conditions are sunny (≥50) or cloudy (<50)
 3. **Smart Advisory**: Combines UV index and weather conditions to generate appropriate clothing and accessory recommendations
 4. **User Display**: Presents recommendations through a clean web interface
 
