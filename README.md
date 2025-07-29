@@ -25,7 +25,8 @@ This project is a Python Flask application that provides clothing accessory advi
     ```
 
 ## Project Structure
-. ├── app.py 
+```
+├── app.py 
 ├── .env 
 ├── README.md 
 ├── route_logic   
@@ -34,6 +35,7 @@ This project is a Python Flask application that provides clothing accessory advi
     └── advice.py 
 └── templates 
     └── index.html
+```
 ## Running the Application
 
 Start the application by executing:
