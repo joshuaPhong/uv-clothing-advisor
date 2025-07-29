@@ -21,11 +21,19 @@ This project is a Python Flask application that provides clothing accessory advi
 
     ```
     NIWA_KEY=your_niwa_key
-    NIWA_SECRET=your_niwa_secret
+    OPEN_WEATHER_KEY=your_openweather_key
     ```
 
 ## Project Structure
-. ├── app.py ├── .env ├── README.md ├── route_logic │   ├── uv_service.py │   ├── weather_service.py │   └── advice.py └── templates └── index.html
+. ├── app.py 
+├── .env 
+├── README.md 
+├── route_logic   
+    ├── uv_service.py    
+    ├── weather_service.py 
+    └── advice.py 
+└── templates 
+    └── index.html
 ## Running the Application
 
 Start the application by executing:
