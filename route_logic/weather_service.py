@@ -22,9 +22,10 @@ def is_cloudy(lat, lon):
 		# Use cloud percentage
 		# cloud_pct = payload.get("clouds", {}).get("all", 0)
 		cloud_index = payload.get("clouds", {}).get("all", 0)
+		location_name = payload.get("name", "Unknown Location")
 		print(payload)
 		# Return True if mostly cloudy or overcast
-		return cloud_index  # cloud_pct >= 50,
+		return cloud_index, location_name
 
 	except requests.exceptions.HTTPError as http_err:
 		logging.error(
