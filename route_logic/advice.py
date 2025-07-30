@@ -6,7 +6,7 @@ def get_clothing_advice(uv_index, is_cloudy=None):
 		return "Weather data unavailable."
 
 	# Unpack the tuple into cloud_index and location_name
-	cloud_index, location_name = is_cloudy
+	cloud_index, location_name, weather_main, weather_description, weather_icon = is_cloudy
 
 	if cloud_index >= 50:
 		if uv_index <= 2:
