@@ -34,7 +34,7 @@ def get_uv_data():
 		r = requests.get(NIWA_API_URL, headers=headers, params=params)
 		r.raise_for_status()
 		payload = r.json()
-		print(payload)
+		# print(payload)
 
 		products = payload.get("products", [])
 
