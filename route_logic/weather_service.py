@@ -30,7 +30,7 @@ def is_cloudy(lat=-36.8485, lon=174.7633):
 		weather_description = weather_data.get("description", "No description")
 		weather_icon = weather_data.get("icon", "Unknown")
 
-		print(payload)
+		# print(payload)
 		return cloud_index, location_name, weather_main, weather_description, weather_icon
 
 	except requests.exceptions.HTTPError as http_err:
