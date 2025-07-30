@@ -1,19 +1,16 @@
-from flask import Flask, render_template, jsonify, session, request
+# app/routes.py
+
+from flask import Blueprint, render_template, jsonify, session, request
 from route_logic.uv_service import get_uv_data
 from route_logic.advice import get_clothing_advice
 from route_logic.weather_service import is_cloudy
 
-from dotenv import load_dotenv
-
-load_dotenv()
-app = Flask(__name__)
-app.secret_key = 'your-secret-key'  # Needed for session
+main_bp = Blueprint('main', __name__)
 
 
-@app.route("/")
+@main_bp.route("/")
 def index():
-
-	lat = session.get('lat', -36.8485)  # Default to Auckland
+	lat = session.get('lat', -36.8485)
 	lon = session.get('lon', 174.7633)
 	print(f"Using coordinates: lat={lat}, lon={lon}")
 
@@ -27,16 +24,17 @@ def index():
 	else:
 		advice = get_clothing_advice(uv_max, cloudy)
 
+	cloud_index, location_name = cloudy if cloudy is not None else (None, None)
+
 	context = {
-		"uv_index": uv_max, "advice": advice, "cloudy": cloudy
+		"uv_index": uv_max, "advice": advice, "cloud_index": cloud_index,
+		"location_name": location_name
 	}
 
-	return render_template(
-			"index.html", **context
-	)
+	return render_template("test_css.html", **context)
 
 
-@app.route('/set_location', methods=['POST'])
+@main_bp.route('/set_location', methods=['POST'])
 def set_location():
 	data = request.get_json()
 
@@ -57,7 +55,3 @@ def set_location():
 	session['lon'] = lon
 
 	return jsonify({'status': 'success', 'lat': lat, 'lon': lon})
-
-
-if __name__ == "__main__":
-	app.run(debug=True)
