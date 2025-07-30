@@ -27,8 +27,13 @@ def index():
 	cloud_index, location_name, weather_main, weather_description, weather_icon = cloudy if cloudy is not None else (None, None)
 
 	context = {
-		"uv_index": uv_max, "advice": advice, "cloud_index": cloud_index,
-		"location_name": location_name
+		"uv_index": uv_max,
+		"advice": advice,
+		"cloud_index": cloud_index,
+		"location_name": location_name,
+		"weather_main": weather_main,
+		"weather_description": weather_description,
+		"weather_icon": weather_icon,
 	}
 
 	return render_template("test_css.html", **context)
