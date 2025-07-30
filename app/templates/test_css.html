@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UV Clothing Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1><span class="sun-icon">☀️</span>UV Clothing Advisor</h1>
+            <p class="subtitle">Smart sun protection recommendations</p>
+        </header>
+
+        {% if uv_index is not none %}
+            <!-- Location Card -->
+            <div class="card location-card">
+                <div class="location-label">Current Location</div>
+                <div class="location-name">{{ location_name }}</div>
+            </div>
+
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">UV Index</div>
+                    <div class="metric-value uv-value">{{ "%.1f"|format(uv_index|float) }}</div>
+                    {% set uv_float = uv_index|float %}
+                    <div class="uv-indicator {% if uv_float < 3 %}uv-low{% elif uv_float < 6 %}uv-moderate{% elif uv_float < 8 %}uv-high{% elif uv_float < 11 %}uv-very-high{% else %}uv-extreme{% endif %}">
+                        {% if uv_float < 3 %}Low{% elif uv_float < 6 %}Moderate{% elif uv_float < 8 %}High{% elif uv_float < 11 %}Very High{% else %}Extreme{% endif %}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">Cloud Cover</div>
+                    <div class="metric-value cloud-value">{{ cloud_index }}%</div>
+                </div>
+            </div>
+
+            <!-- Advice Card -->
+            <div class="card advice-card">
+                <div class="advice-title">
+                    <span>👕</span> Clothing Recommendation
+                </div>
+                <div class="advice-content">
+                    {{ advice }}
+                </div>
+            </div>
+
+        {% else %}
+            <!-- Error State -->
+            <div class="card advice-card">
+                <div class="advice-title">
+                    <span>⚠️</span> Unable to Fetch Data
+                </div>
+                <div class="advice-content">
+                    <strong>Weather data is currently unavailable.</strong><br>
+                    {{ advice if advice else "Please try again later or check your internet connection." }}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Location Controls -->
+        <div class="card">
+            <div class="location-controls">
+                <button class="location-btn" onclick="getLocationAndSend()" id="locationBtn">
+                    <span class="btn-icon">📍</span>
+                    <span class="btn-text">Use My Location</span>
+                </button>
+                <div class="location-status" id="locationStatus"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <small>Powered by NIWA UV API & OpenWeatherMap</small>
+        </footer>
+    </div>
+
+    <script>
+        function updateLocationButton(state, message) {
+            const btn = document.getElementById('locationBtn');
+            const status = document.getElementById('locationStatus');
+            const btnText = btn.querySelector('.btn-text');
+            const btnIcon = btn.querySelector('.btn-icon');
+
+            switch(state) {
+                case 'loading':
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                    btnIcon.textContent = '🔄';
+                    btnText.textContent = 'Getting Location...';
+                    status.textContent = '';
+                    break;
+                case 'success':
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                    btnIcon.textContent = '✅';
+                    btnText.textContent = 'Location Updated';
+                    status.textContent = message || 'Location updated successfully';
+                    status.className = 'location-status success';
+                    setTimeout(() => {
+                        btnIcon.textContent = '📍';
+                        btnText.textContent = 'Use My Location';
+                    }, 2000);
+                    break;
+                case 'error':
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                    btnIcon.textContent = '❌';
+                    btnText.textContent = 'Location Failed';
+                    status.textContent = message || 'Unable to get location';
+                    status.className = 'location-status error';
+                    setTimeout(() => {
+                        btnIcon.textContent = '📍';
+                        btnText.textContent = 'Try Again';
+                    }, 3000);
+                    break;
+            }
+        }
+
+        function getLocationAndSend() {
+            if (!navigator.geolocation) {
+                updateLocationButton('error', 'Geolocation not supported by this browser');
+                return;
+            }
+
+            updateLocationButton('loading');
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    fetch('/set_location', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ lat: lat, lon: lon })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            updateLocationButton('success', 'Refreshing weather data...');
+                            setTimeout(() => window.location.reload(), 1500);
+                        } else {
+                            updateLocationButton('error', data.message || 'Server error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Network error:', error);
+                        updateLocationButton('error', 'Network error occurred');
+                    });
+                },
+                function(error) {
+                    let message = 'Location access denied';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            message = 'Location access denied by user';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message = 'Location information unavailable';
+                            break;
+                        case error.TIMEOUT:
+                            message = 'Location request timed out';
+                            break;
+                    }
+                    updateLocationButton('error', message);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000
+                }
+            );
+        }
+
+        // Check if location is set
+        document.addEventListener('DOMContentLoaded', function() {
+            const hasLocation = "{{ location_name }}" !== "" && "{{ location_name }}" !== "Unknown Location";
+            if (!hasLocation && !localStorage.getItem('locationRequested')) {
+                localStorage.setItem('locationRequested', 'true');
+            }
+        });
+    </script>
+
+    <style>
+        .location-controls {
+            text-align: center;
+        }
+
+        .location-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .location-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .location-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .location-btn.loading .btn-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .location-status {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .location-status.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .location-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+
+        .footer small {
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 480px) {
+            .location-btn {
+                padding: 0.65rem 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</body>
+</html>

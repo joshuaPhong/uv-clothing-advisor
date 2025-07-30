@@ -107,7 +107,7 @@ uv-clothing-advisor/
 
 1. **Start the application**:
    ```bash
-   python app.py
+   python run.py
    ```
 
 2. **Access the application**:
@@ -140,7 +140,7 @@ When APIs are unavailable, users receive clear error messages explaining the sit
 ### Running in Development Mode
 ```bash
 export FLASK_ENV=development  # On Windows: set FLASK_ENV=development
-python app.py
+python run.py
 ```
 
 ### Testing
