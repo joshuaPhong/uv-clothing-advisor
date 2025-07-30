@@ -1,6 +1,8 @@
 # app/routes.py
 
 from flask import Blueprint, render_template, jsonify, session, request
+
+from route_logic.bot_advice import get_dynamic_advice
 from route_logic.uv_service import get_uv_data
 from route_logic.advice import get_clothing_advice
 from route_logic.weather_service import is_cloudy
@@ -19,11 +21,12 @@ def index():
     cloudy_max = uv_data.get("cloudy_sky_max")
     cloudy = is_cloudy(lat, lon)
 
-    # Unpack the cloudy tuple first
     if cloudy is not None:
         cloud_index, location_name, weather_main, weather_description, weather_icon = cloudy
     else:
         cloud_index, location_name, weather_main, weather_description, weather_icon = (None, None, None, None, None)
+
+    robot_advice = None  # Ensure it's always defined
 
     if sunny_max is None and cloudy_max is None:
         advice = "Could not fetch UV data. Please try again later."
@@ -32,41 +35,24 @@ def index():
         advice = "Could not fetch weather data. Please try again later."
         uv_index = None
     else:
-        # Fixed logic: use cloudy_max when cloudy (>= 50), sunny_max when clear
         uv_index = cloudy_max if cloud_index >= 50 else sunny_max
         advice = get_clothing_advice(uv_index, cloudy)
 
+        try:
+            robot_advice = get_dynamic_advice(uv_index, lat, lon,
+                                              weather_main, weather_description)
+        except Exception as e:
+            robot_advice = f"Error calling language model: {e}"
+
     context = {
-        "uv_index": uv_index,  # Fixed: was uv_max (undefined variable)
+        "uv_index": uv_index,
         "advice": advice,
         "cloud_index": cloud_index,
         "location_name": location_name,
         "weather_main": weather_main,
         "weather_description": weather_description,
         "weather_icon": weather_icon,
+        "robot_advice": robot_advice,
     }
 
     return render_template("test_css.html", **context)
-
-
-@main_bp.route('/set_location', methods=['POST'])
-def set_location():
-    data = request.get_json()
-
-    if not data:
-        return jsonify(
-            {'status': 'error', 'message': 'No JSON body received'}
-        ), 400
-
-    lat = data.get('lat')
-    lon = data.get('lon')
-
-    if lat is None or lon is None:
-        return jsonify(
-            {'status': 'error', 'message': 'Latitude or longitude missing'}
-        ), 400
-
-    session['lat'] = lat
-    session['lon'] = lon
-
-    return jsonify({'status': 'success', 'lat': lat, 'lon': lon})
