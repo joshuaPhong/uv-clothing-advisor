@@ -1,6 +1,6 @@
 # app/routes.py
 
-from flask import Blueprint, render_template, jsonify, session, request
+from flask import Blueprint, render_template, jsonify, session, request, redirect, url_for
 
 from route_logic.bot_advice import get_dynamic_advice
 from route_logic.uv_service import get_uv_data
@@ -25,7 +25,7 @@ def index():
 		cloud_index, location_name, weather_main, weather_description, weather_icon = cloudy
 	else:
 		cloud_index, location_name, weather_main, weather_description, weather_icon = (
-		None, None, None, None, None)
+			None, None, None, None, None)
 
 	robot_advice = None  # Ensure it's always defined
 
@@ -41,8 +41,8 @@ def index():
 
 		try:
 			robot_advice = get_dynamic_advice(
-				uv_index, lat, lon, weather_main, weather_description
-				)
+					uv_index, lat, lon, weather_main, weather_description
+			)
 		except Exception as e:
 			robot_advice = f"Error calling language model: {e}"
 
@@ -78,3 +78,22 @@ def set_location():
 	session['lon'] = lon
 
 	return jsonify({'status': 'success', 'lat': lat, 'lon': lon})
+
+
+@main_bp.route('/user_location', methods=['POST'])
+def user_location():
+	lat = request.form.get('lat')
+	lon = request.form.get('lon')
+
+	if lat is None or lon is None:
+		# Optionally flash a message or handle error
+		return redirect(url_for('main.index'))
+
+	try:
+		session['lat'] = float(lat)
+		session['lon'] = float(lon)
+	except ValueError:
+		# Handle invalid float conversion if needed
+		return redirect(url_for('main.index'))
+
+	return redirect(url_for('main.index'))
