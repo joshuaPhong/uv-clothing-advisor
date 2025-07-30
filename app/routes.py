@@ -24,7 +24,7 @@ def index():
 	else:
 		advice = get_clothing_advice(uv_max, cloudy)
 
-	cloud_index, location_name = cloudy if cloudy is not None else (None, None)
+	cloud_index, location_name, weather_main, weather_description, weather_icon = cloudy if cloudy is not None else (None, None)
 
 	context = {
 		"uv_index": uv_max, "advice": advice, "cloud_index": cloud_index,
