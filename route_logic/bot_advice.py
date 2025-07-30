@@ -82,7 +82,7 @@ Output:
         )
         response.raise_for_status()
         data = response.json()
-        print("Raw Ollama Response:", data)
+        # print("Raw Ollama Response:", data)
         return data.get('response', 'No advice returned.')
     except requests.exceptions.RequestException as e:
         return f"Error connecting to local LLM: {e}"
