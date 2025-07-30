@@ -6,12 +6,13 @@ DEFAULT_LOCATION = {"lat": -36.8485, "lon": 174.7633}
 OWM_API_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 
-def is_cloudy(lat, lon):
+def is_cloudy(lat=-36.8485, lon=174.7633):
 	open_weather_key = os.getenv("OPEN_WEATHER_KEY")
 	params = {
-		"lat":   lat, "lon": lon,
-		"appid": open_weather_key, "units": "metric"
-		# optional, in case you want temps later
+		"lat":   lat,
+		"lon": lon,
+		"appid": open_weather_key,
+		"units": "metric"
 	}
 
 	try:
@@ -23,9 +24,14 @@ def is_cloudy(lat, lon):
 		# cloud_pct = payload.get("clouds", {}).get("all", 0)
 		cloud_index = payload.get("clouds", {}).get("all", 0)
 		location_name = payload.get("name", "Unknown Location")
+		# gather more data for the bot prompt
+		weather_data = payload.get("weather", [{}])[0]
+		weather_main = weather_data.get("main", "Unknown")
+		weather_description = weather_data.get("description", "No description")
+		weather_icon = weather_data.get("icon", "Unknown")
+
 		print(payload)
-		# Return True if mostly cloudy or overcast
-		return cloud_index, location_name
+		return cloud_index, location_name, weather_main, weather_description, weather_icon
 
 	except requests.exceptions.HTTPError as http_err:
 		logging.error(
