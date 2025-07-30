@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>UV Clothing Advice</title>
-  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.5.10/css/pico.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
+{#  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.5.10/css/pico.min.css">#}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -13,8 +14,9 @@
 
   {% if uv_index is not none %}
     <section>
+	<h2>Location: <strong>{{ location_name }}</strong></h2>
       <h2>Today's UV Index: <strong>{{ uv_index }}</strong></h2>
-      <h2>Cloudy: <strong>{{ cloudy }}</strong> %</h2>
+      <h2>Cloudy: <strong>{{ cloud_index }}</strong> %</h2>
 
       <p><strong>Advice:</strong> {{ advice }}</p>
     </section>
