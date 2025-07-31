@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Home | UV Clothing Advisor{% endblock %}
+
+{% block content %}
+    {% if uv_index is not none %}
+        <div class="card location-card">
+            <div class="location-label">Current Location</div>
+            <div class="location-name">{{ location_name }}</div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">UV Index</div>
+                <div class="metric-value uv-value">{{ "%.1f"|format(uv_index|float) }}</div>
+                {% set uv_float = uv_index|float %}
+                <div class="uv-indicator {% if uv_float < 3 %}uv-low{% elif uv_float < 6 %}uv-moderate{% elif uv_float < 8 %}uv-high{% elif uv_float < 11 %}uv-very-high{% else %}uv-extreme{% endif %}">
+                    {% if uv_float < 3 %}Low{% elif uv_float < 6 %}Moderate{% elif uv_float < 8 %}High{% elif uv_float < 11 %}Very High{% else %}Extreme{% endif %}
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Cloud Cover</div>
+                <div class="metric-value cloud-value">{{ cloud_index }}%</div>
+            </div>
+        </div>
+
+        <div class="card advice-card">
+            <div class="advice-title">
+                <span>👕</span> Clothing Recommendation
+            </div>
+            <div class="advice-content">
+                {{ robot_advice }}
+            </div>
+        </div>
+
+    {% else %}
+        <div class="card advice-card">
+            <div class="advice-title">
+                <span>⚠️</span> Unable to Fetch Data
+            </div>
+            <div class="advice-content">
+                <strong>Weather data is currently unavailable.</strong><br>
+                {{ advice if advice else "Please try again later or check your internet connection." }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="location-controls">
+            <button class="location-btn" onclick="getLocationAndSend()" id="locationBtn">
+                <span class="btn-icon">📍</span>
+                <span class="btn-text">Use My Location</span>
+            </button>
+            <div class="location-status" id="locationStatus"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <form method="POST" action="{{ url_for('main.user_location') }}">
+            <label for="location-select">Or select your location:</label>
+            <select id="location-select" name="lat_lon" required>
+                <option value="">-- Choose a location --</option>
+                <option value="-36.8485,174.7633">Auckland</option>
+                <option value="-41.2865,174.7762">Wellington</option>
+                <option value="-43.5321,172.6362">Christchurch</option>
+                <option value="-45.0312,168.6626">Queenstown</option>
+            </select>
+            <button type="submit">Set Location</button>
+        </form>
+    </div>
+{% endblock %}

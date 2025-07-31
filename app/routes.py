@@ -1,4 +1,4 @@
-login.html# app/auth_routes.py
+
 
 from flask import Blueprint, render_template, jsonify, session, request, redirect, url_for
 
@@ -54,7 +54,7 @@ def index():
 		"weather_icon":        weather_icon, "robot_advice": robot_advice,
 	}
 
-	return render_template("test_css.html", **context)
+	return render_template("home.html", **context)
 
 
 @main_bp.route('/set_location', methods=['POST'])
