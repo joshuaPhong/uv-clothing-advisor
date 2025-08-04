@@ -5,23 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}UV Clothing Advisor{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/js_button_styles.css') }}">
 </head>
 <body>
     <div class="container">
-        {% block header %}
-            {% include 'partials/header.html' %}
-        {% endblock %}
+        {% block header %}{% endblock %}
 
-{#        {% block nav %}#}
-{#            {% include 'partials/navbar.html' %}#}
-{#        {% endblock %}#}
+        {% block nav %}{% endblock %}
 
         {% block content %}{% endblock %}
 
-        {% block footer %}
-            {% include 'partials/footer.html' %}
-        {% endblock %}
+        {% block footer %}{% endblock %}
     </div>
 
     <script>

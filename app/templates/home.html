@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Home | UV Clothing Advisor{% endblock %}
 
+
+{% block header %}
+    {% include 'partials/header.html' with context %}
+{% endblock %}
+
+{% block nav %}
+	{% include 'partials/navbar.html' %}
+{% endblock %}
+
+{% set location_name = location_name|default("Unknown Location") %}
 {% block content %}
+	{% include 'partials/flash_messages.html' %}
     {% if uv_index is not none %}
         <div class="card location-card">
             <div class="location-label">Current Location</div>
@@ -68,4 +79,8 @@
             <button type="submit">Set Location</button>
         </form>
     </div>
+{% endblock %}
+
+{% block footer %}
+	{% include 'partials/footer.html' %}
 {% endblock %}

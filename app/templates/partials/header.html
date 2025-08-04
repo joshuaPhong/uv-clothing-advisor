@@ -1,8 +1,10 @@
 <header class="header">
     <h1>
+        {% if weather_icon %}
         <span class="sun-icon">
             <img src="https://openweathermap.org/img/wn/{{ weather_icon }}@2x.png" alt="Weather icon" style="vertical-align: middle;">
         </span>
+        {% endif %}
         UV Clothing Advisor
     </h1>
     <p class="subtitle">Smart sun protection recommendations</p>

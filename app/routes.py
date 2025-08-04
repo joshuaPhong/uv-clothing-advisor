@@ -7,6 +7,7 @@ from route_logic.uv_service import get_uv_data
 from route_logic.advice import get_clothing_advice
 from route_logic.weather_service import is_cloudy
 
+
 main_bp = Blueprint('main', __name__)
 
 

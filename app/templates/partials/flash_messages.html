@@ -1,0 +1,36 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}" data-auto-dismiss="1000">
+                    {{ message }}
+                    <button onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<script>
+// Auto-dismiss flash messages
+document.addEventListener('DOMContentLoaded', function() {
+    const flashMessages = document.querySelectorAll('.flash-message[data-auto-dismiss]');
+
+    flashMessages.forEach(function(message) {
+        const dismissTime = parseInt(message.getAttribute('data-auto-dismiss'));
+
+        // Add fade-out animation after specified time
+        setTimeout(function() {
+            message.style.transition = 'opacity 0.5s ease-out';
+            message.style.opacity = '0';
+
+            // Remove element completely after fade animation
+            setTimeout(function() {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 500);
+        }, dismissTime);
+    });
+});
+</script>
