@@ -621,3 +621,122 @@ body {
         font-size: 0.9rem;
     }
 }
+/* Navbar styling to match your existing theme */
+.navbar {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.navbar a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    border: 1px solid transparent;
+    display: inline-block;
+}
+
+.navbar a:hover {
+    color: var(--accent-light);
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+    transform: translateY(-1px);
+}
+
+.navbar a:first-child {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.navbar span {
+    color: var(--text-primary);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    margin-right: auto;
+}
+
+/* Right side navigation links */
+.navbar a:last-child,
+.navbar a:nth-last-child(2) {
+    margin-left: 0.5rem;
+}
+
+/* Special styling for logout link */
+.navbar a[href*="logout"] {
+    background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
+    color: white;
+    font-weight: 600;
+}
+
+.navbar a[href*="logout"]:hover {
+    background: linear-gradient(135deg, #dc2626 0%, var(--error) 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+/* Login/Register buttons */
+.navbar a[href*="login"],
+.navbar a[href*="register"] {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+    color: white;
+    font-weight: 600;
+}
+
+.navbar a[href*="login"]:hover,
+.navbar a[href*="register"]:hover {
+    background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+/* Responsive navbar */
+@media (max-width: 640px) {
+    .navbar {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .navbar span {
+        margin-right: 0;
+        order: -1;
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .navbar a {
+        flex: 1;
+        text-align: center;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .navbar a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+        min-width: 100px;
+    }
+}
